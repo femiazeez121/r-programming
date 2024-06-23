@@ -1,0 +1,43 @@
+# Create a caching function for mean
+makeCacheMean <- function() {
+  # Initialize a cache environment
+  cache <- new.env()
+  
+  # Function to compute mean or retrieve from cache
+  cachedMean <- function(x) {
+    # Create a unique key based on the input vector
+    key <- paste(sort(x), collapse = ",")
+    
+    # Check if the result is already in the cache
+    if (exists(key, envir = cache)) {
+      message("Getting cached data")
+      return(get(key, envir = cache))
+    }
+    
+    # Compute the mean if not in cache
+    mean_value <- mean(x)
+    
+    # Store the result in the cache
+    assign(key, mean_value, envir = cache)
+    
+    return(mean_value)
+  }
+  
+  # Return the function to the user
+  return(cachedMean)
+}
+
+# Example usage
+# Create a cached mean function
+cachedMean <- makeCacheMean()
+
+# Compute mean for a vector (first time computation)
+v <- c(1, 2, 3, 4, 5)
+cachedMean(v)
+
+# Compute mean for the same vector (retrieved from cache)
+cachedMean(v)
+
+# Compute mean for a different vector (first time computation)
+w <- c(5, 4, 3, 2, 1)
+cachedMean(w)
